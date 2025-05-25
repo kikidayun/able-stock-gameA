@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareRound.css" rel="stylesheet">
+  <title>2009년 기업 결과[A]</title>
+  <style>
+    body {
+      font-family: 'SUITE', 'NanumSquareRound', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eaf4fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1187px;
+      background: white;
+      border-radius: 16px;
+      margin-top: 2rem;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background: #6ea5ee;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+
+    .header-left {
+      position: absolute;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 80px;
+      width: auto;
+    }
+
+    .header-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .header-right {
+      position: absolute;
+      right: 2rem;
+      font-size: 4rem;
+      font-weight: bold;
+      opacity: 0.3;
+      font-style: italic;
+    }
+
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 30px 0;
+    }
+
+    .button-group button {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 8px 20px;
+      border: none;
+      background-color: #2f80ed;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .button-group button:hover {
+      background-color: #166edb;
+    }
+
+    .result-box {
+      font-size: 2rem; /* 작고 깔끔하게 */
+      font-weight: 600;
+      color: #444;
+      text-align: center;
+      padding: 2rem 2rem;
+      min-height: 60px;
+      transition: all 0.3s ease;
+    }
+
+    .result-box.big {
+      font-size: 15rem;
+      font-weight: 800;
+      min-height: 150px;
+      margin-bottom: 2rem;
+    }
+
+    .next-button {
+      margin-top: 1.7rem;
+      background: #2f80ed;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+      transition: 0.3s;
+      margin-bottom: 1.5rem;
+    }
+    .next-button:hover {
+      background-color: #166edb;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <img src="https://able0220.github.io/stockgameb/에이블 로고.png" alt="로고" />
+      </div>
+      <div class="header-title">2009년 투자 결과</div>
+      <div class="header-right">A</div>
+    </header>
+    <div class="button-group">
+      <script>
+        for (let i = 65; i <= 76; i++) {
+          document.write(`<button onclick="showResults('${String.fromCharCode(i)}')">기업 ${String.fromCharCode(i)}</button>`);
+        }
+      </script>
+    </div>
+
+    <div class="result-box" id="resultBox">기업 버튼을 눌러 결과를 확인하세요.</div>
+
+
+    <div style="display: flex; justify-content: center; margin-top: 2rem;">
+      <button class="next-button" onclick="goToNextPage()">👀 법인별 결과 확인</button>
+    </div>
+
+  </div>
+
+  <script>
+    const companyResults = {
+      A: "-1%",
+      B: "64%",
+      C: "25%",
+      D: "274%",
+      E: "64%",
+      F: "60%",
+      G: "106%",
+      H: "15%",
+      I: "201%",
+      J: "169%",
+      K: "95%",
+      L: "55%"
+    };
+
+    function showResults(companyLetter) {
+      const result = companyResults[companyLetter] || "-";
+      const resultBox = document.getElementById("resultBox");
+      resultBox.textContent = result;
+
+      // 기본 클래스 초기화
+      resultBox.className = "result-box big";
+
+      // 색상 조건 분기
+      if (result === "-") {
+        resultBox.style.color = "#888"; // 회색 (상장되지 않음 등)
+      } else if (result.startsWith("-")) {
+        resultBox.style.color = "#0004ff"; // 파랑 (하락)
+      } else {
+        resultBox.style.color = "red"; // 빨강 (상승)
+      }
+    }
+
+
+    function goToNextPage() {
+      alert("2009년 투자가 종료되었습니다. 투자 결과 창으로 이동합니다.");
+      window.location.href = "9-2010년.html";
+    }
+  </script>
+</body>
+</html>

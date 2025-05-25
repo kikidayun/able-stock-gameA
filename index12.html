@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareRound.css" rel="stylesheet">
+  <title>2010년 기업 결과[A]</title>
+  <style>
+    body {
+      font-family: 'SUITE', 'NanumSquareRound', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eaf4fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1187px;
+      background: white;
+      border-radius: 16px;
+      margin-top: 2rem;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background: #6ea5ee;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+
+    .header-left {
+      position: absolute;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 80px;
+      width: auto;
+    }
+
+    .header-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .header-right {
+      position: absolute;
+      right: 2rem;
+      font-size: 4rem;
+      font-weight: bold;
+      opacity: 0.3;
+      font-style: italic;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 30px 0 10px;
+    }
+
+    .button-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button-group button {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 8px 20px;
+      border: none;
+      background-color: #2f80ed;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .button-group button:hover {
+      background-color: #166edb;
+    }
+
+    .company-name-label {
+      font-size: 0.85rem;
+      margin-top: 6px;
+      color: #333;
+      display: none;
+    }
+
+    .result-box {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #444;
+      text-align: center;
+      padding: 2rem;
+      min-height: 60px;
+      transition: all 0.3s ease;
+    }
+
+    .result-box.big {
+      font-size: 15rem;
+      font-weight: 800;
+      min-height: 150px;
+    }
+
+    .next-button {
+      margin-top: 1.7rem;
+      background: #2f80ed;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+      margin-bottom: 1.5rem;
+    }
+
+    .next-button:hover {
+      background-color: #166edb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <img src="https://able0220.github.io/stockgameb/에이블 로고.png" alt="로고" />
+      </div>
+      <div class="header-title">2010년 투자 결과</div>
+      <div class="header-right">A</div>
+    </header>
+
+    <div class="button-group" id="buttonGroup"></div>
+
+    <div class="result-box" id="resultBox">기업 버튼을 눌러 결과를 확인하세요.</div>
+
+    <div style="display: flex; justify-content: center;">
+      <button class="next-button" onclick="goToNextPage()">👀 법인별 결과 확인</button>
+    </div>
+  </div>
+
+  <script>
+    const companyResults = {
+      A: "2%",
+      B: "87%",
+      C: "54%",
+      D: "96%",
+      E: "51%",
+      F: "23%",
+      G: "47%",
+      H: "1152%",
+      I: "292%",
+      J: "42%",
+      K: "46%",
+      L: "101%"
+    };
+
+    const companyNames = {
+      A: "월마트",
+      B: "마이크로소프트",
+      C: "도요타",
+      D: "애플",
+      E: "구글",
+      F: "코카콜라",
+      G: "삼성전자",
+      H: "테슬라",
+      I: "아마존",
+      J: "화이자",
+      K: "JP모건",
+      L: "보잉"
+    };
+
+    const buttonGroup = document.getElementById("buttonGroup");
+    for (let i = 65; i <= 76; i++) {
+      const letter = String.fromCharCode(i);
+      const div = document.createElement("div");
+      div.className = "button-item";
+      div.innerHTML = `
+        <button onclick="showResults('${letter}')">기업 ${letter}</button>
+        <span class="company-name-label" id="label-${letter}"></span>
+      `;
+      buttonGroup.appendChild(div);
+    }
+
+    function showResults(companyLetter) {
+      const name = companyNames[companyLetter] || "정보 없음";
+      const rate = companyResults[companyLetter] || "-";
+      const resultBox = document.getElementById("resultBox");
+
+      resultBox.className = "result-box big";
+      resultBox.innerHTML = `<div id="companyName" style="font-size: 2.8rem; color: #555; cursor: pointer;">${name}</div>`;
+      
+      document.getElementById("companyName").onclick = () => {
+        const alreadyShown = document.getElementById("rateValue");
+        if (alreadyShown) return; // 중복 클릭 방지
+
+        const rateDiv = document.createElement("div");
+        rateDiv.id = "rateValue";
+        rateDiv.textContent = rate;
+        rateDiv.style.color = rate === "-" ? "#888" : rate.startsWith("-") ? "#0004ff" : "red";
+        resultBox.appendChild(rateDiv);
+      };
+    }
+
+    function goToNextPage() {
+      alert("2010년 투자가 종료되었습니다. 투자 결과 창으로 이동합니다.");
+      window.location.href = "13-2015년.html";
+    }
+  </script>
+</body>
+</html>

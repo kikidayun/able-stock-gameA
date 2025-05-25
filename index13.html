@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareRound.css" rel="stylesheet">
+  <title>2010년 투자 결과[A]</title>
+  <style>
+    body {
+      font-family: 'SUITE', 'NanumSquareRound', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eaf4fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1187px;
+      background: white;
+      border-radius: 16px;
+      margin-top: 2rem;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background: #6ea5ee;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+
+    .header-left {
+      position: absolute;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 80px;
+      width: auto;
+    }
+
+    .header-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .header-right {
+      position: absolute;
+      right: 2rem;
+      font-size: 4rem;
+      font-weight: bold;
+      opacity: 0.3;
+      font-style: italic;
+    }
+
+    .result-table {
+      width: calc(100% - 4rem);
+      margin: 1rem 2rem;
+      table-layout: auto;
+      border-collapse: collapse;
+    }
+
+    .result-table th,
+    .result-table td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .result-table th {
+      background-color: #f0f6fd;
+      font-weight: 700;
+      color: #2f80ed;
+    }
+
+    .result-table td.amount-right {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-table td.final-asset {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #222;
+      text-align: right;
+    }
+
+    .button-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .button-wrapper button {
+      background: #2f80ed;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .highlight-winner {
+      background-color: #fffbe6;
+      font-weight: bold;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 8px rgba(255, 193, 7, 0.3); }
+      to   { box-shadow: 0 0 16px rgba(255, 193, 7, 0.6); }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <img src="https://able0220.github.io/stockgameb/에이블 로고.png" alt="로고" />
+      </div>
+      <div class="header-title">2015년 [2010년 법인별 결과]</div>
+      <div class="header-right">A</div>
+    </header>
+
+    <div id="results" style="display:none;"></div>
+
+    <div id="chartContainer" style="padding:2rem; display:none;">
+      <canvas id="lineChart" width="1000" height="400"></canvas>
+    </div>
+
+    <div class="button-wrapper" id="buttonBox">
+      <button onclick="showResults()">📊 결과 보기</button>
+      <button onclick="sortResults()">🏆 정렬 보기</button>
+      <button onclick="showChart()">📈 그래프 보기</button>
+    </div>
+  </div>
+
+<script>
+const teamNames = JSON.parse(sessionStorage.getItem("teamNames") || "[]");
+const investments = JSON.parse(sessionStorage.getItem("teamInvestments2010") || "{}");
+const teamCapitals = JSON.parse(localStorage.getItem("capitalMap_2010") || "{}");
+
+const companyResults = {
+  A: "2%", B: "87%", C: "54%", D: "96%", E: "51%",
+  F: "23%", G: "47%", H: "1152%", I: "292%", J: "42%", K: "46%", L: "101%"
+};
+
+const resultsDiv = document.getElementById("results");
+let myChart = null;
+
+function renderAllTeamResults(sorted = false) {
+  const companies = Object.keys(companyResults);
+  const resultRows = [];
+
+  teamNames.forEach(team => {
+    const teamInvest = investments[team] || {};
+    const teamCapital = Number(teamCapitals[team]) || 12000;
+
+    let investedCompanies = [];
+    let totalInvested = 0;
+    let totalProfit = 0;
+
+    companies.forEach(company => {
+      const amount = Number(teamInvest[company]) || 0;
+      if (amount > 0) investedCompanies.push(company);
+      const rate = parseFloat(companyResults[company].replace('%', '')) / 100;
+      totalProfit += amount * rate;
+      totalInvested += amount;
+    });
+
+    const uninvested = teamCapital - totalInvested;
+    const inflationBonus = Math.round(uninvested * 0.1);
+    const finalProfit = Math.round(totalProfit);
+    const enhancedUninvested = Math.max(0, uninvested + inflationBonus);
+    const finalAsset = totalInvested + finalProfit + enhancedUninvested;
+
+    resultRows.push({
+      team, finalAsset, teamCapital,
+      investedCompanies: investedCompanies.length > 0 ? investedCompanies : ['투자 없음'],
+      totalInvested, finalProfit, enhancedUninvested
+    });
+  });
+
+  if (sorted) resultRows.sort((a, b) => b.finalAsset - a.finalAsset);
+  const topTeam = sorted && resultRows.length > 0 ? resultRows[0].team : null;
+
+  let html = `
+    <table class="result-table">
+      <tr>
+        <th>법인명</th>
+        <th>최종 자산<br>(만원)</th>
+        <th>2010년 자본금<br>(만원)</th>
+        <th>투자 기업</th>
+        <th>투자 금액<br>(만원)</th>
+        <th>수익<br>(만원)</th>
+        <th>남은 금액<br>(만원, 상승 반영)</th>
+      </tr>`;
+
+  resultRows.forEach(row => {
+    html += `
+      <tr class="${row.team === topTeam ? 'highlight-winner' : ''}">
+        <td>${row.team}</td>
+        <td class="final-asset">${row.finalAsset.toLocaleString()}</td>
+        <td class="amount-right">${row.teamCapital.toLocaleString()}</td>
+        <td>${row.investedCompanies.join(', ')}</td>
+        <td class="amount-right">${row.totalInvested.toLocaleString()}</td>
+        <td class="amount-right" style="color:${row.finalProfit > 0 ? 'red' : row.finalProfit < 0 ? 'blue' : 'black'};"><strong>${row.finalProfit.toLocaleString()}</strong></td>
+        <td class="amount-right">${row.enhancedUninvested.toLocaleString()}</td>
+      </tr>`;
+  });
+
+  html += "</table>";
+  resultsDiv.innerHTML = html;
+  resultsDiv.style.display = "block";
+}
+
+function showResults() {
+  const companies = Object.keys(companyResults);
+  const newCapitalMap = {};
+
+  teamNames.forEach(team => {
+    const teamInvest = investments[team] || {};
+    const teamCapital = Number(teamCapitals[team]) || 12000;
+
+    let totalInvested = 0;
+    let totalProfit = 0;
+
+    companies.forEach(company => {
+      const amount = Number(teamInvest[company]) || 0;
+      const rate = parseFloat(companyResults[company].replace('%', '')) / 100;
+      totalProfit += amount * rate;
+      totalInvested += amount;
+    });
+
+    const uninvested = teamCapital - totalInvested;
+    const inflationBonus = Math.round(uninvested * 0.1);
+    const finalProfit = Math.round(totalProfit);
+    const enhancedUninvested = Math.max(0, uninvested + inflationBonus);
+    const finalAsset = totalInvested + finalProfit + enhancedUninvested;
+
+    newCapitalMap[team] = finalAsset;
+  });
+
+  localStorage.setItem("capitalMap_2015", JSON.stringify(newCapitalMap));
+  localStorage.setItem("capitalUpdated_2015", "true");
+
+  renderAllTeamResults();
+}
+
+function sortResults() {
+  renderAllTeamResults(true);
+}
+
+function showChart() {
+  const chartContainer = document.getElementById("chartContainer");
+  chartContainer.style.display = "block";
+  chartContainer.scrollIntoView({ behavior: 'smooth' });
+
+  renderChart(); 
+}
+
+function renderChart() {
+  const capitalMap_2009 = JSON.parse(localStorage.getItem("capitalMap") || "{}");
+  const capitalMap_2010 = JSON.parse(localStorage.getItem("capitalMap_2010") || "{}");
+  const capitalMap_2015 = JSON.parse(localStorage.getItem("capitalMap_2015") || "{}");
+
+  const history = {};
+  teamNames.forEach(team => {
+    history[team] = [
+      12000,
+      capitalMap_2009[team] || 0,
+      capitalMap_2010[team] || 0,
+      capitalMap_2015[team] || 0
+    ];
+  });
+
+  const finalAssets = Object.values(history).map(arr => arr[3]);
+  const maxFinalAsset = Math.max(...finalAssets);
+  const dynamicMaxY = Math.ceil(maxFinalAsset / 10000) * 10000; 
+
+  const ctx = document.getElementById('lineChart').getContext('2d');
+  if (myChart) myChart.destroy();
+
+  myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['초기', '2009', '2010', '2015'],
+      datasets: Object.entries(history).map(([team, values], i) => ({
+        label: `${team}`,
+        data: values,
+        borderColor: `hsl(${i * 50}, 70%, 50%)`,
+        backgroundColor: 'transparent',
+        tension: 0
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: '법인별 자산 변화 추이', font: { size: 18 } },
+        legend: { position: 'top', labels: { font: { size: 14 } } },
+        tooltip: {
+          callbacks: {
+            label: (context) => `자산: ${context.parsed.y.toLocaleString()}만원`
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: dynamicMaxY,
+          title: { display: true, text: '자산 (만원)', font: { size: 14 } },
+          ticks: { callback: value => `${value.toLocaleString()}` }
+        },
+        x: {
+          title: { display: true, text: '연도', font: { size: 14 } }
+        }
+      },
+      elements: {
+        line: { borderWidth: 3 },
+        point: { radius: 5, hoverRadius: 7 }
+      }
+    }
+  });
+
+  document.getElementById("chartContainer").style.display = "block";
+}
+</script>
+</body>
+</html>

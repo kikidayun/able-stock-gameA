@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareRound.css" rel="stylesheet">
+  <title>2010년 시대 상황[A]</title>
+  <style>
+    /* 공통 폰트 및 배경 */
+    body {
+      font-family: 'SUITE', 'NanumSquareRound', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eaf4fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1187px;
+      background: white;
+      border-radius: 16px;
+      margin-top: 2rem;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* 상단 헤더 */
+    header {
+      background: #6ea5ee;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+
+    .header-left {
+      position: absolute;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 80px;
+      width: auto;
+    }
+
+    .header-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      text-align: center;
+    }
+
+    .header-right {
+      position: absolute;
+      right: 2rem;
+      font-size: 4rem;
+      font-weight: bold;
+      opacity: 0.3;
+      font-style: italic;
+      color: #ffffff;
+    }
+    #story-text {
+      margin-top: 2rem;
+      font-size: 1.5rem;  
+      font-weight: 700;
+      line-height: 1.8;
+      color: #333;
+      text-align: left;
+      max-width: 1000px;      /* ← 너비 늘리기 */
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 2rem;
+      word-break: keep-all;   /* ← 단어 단위로 줄바꿈 */
+      white-space: normal;    /* 줄바꿈 가능 (줄 내림 허용 but 단어는 깨지지 않게) */
+    }
+
+    /* 버튼 */
+    button {
+      margin-top: 1.7rem;
+      background: #2f80ed;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #5393f5;
+      transform: scale(1.08);
+    }
+
+    .button-wrapper {
+      text-align: center;
+      padding: 1rem 2rem 2rem;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <img src="https://able0220.github.io/stockgameb/에이블 로고.png" alt="로고" class="logo" />
+      </div>
+      <div class="header-title">2010년 시대 상황</div>
+      <div class="header-right">A</div>
+    </header>
+
+    <div id="story-text" class="main-description"></div>
+
+    <div class="button-wrapper">
+      <button onclick="submitFooterText()">▶️ 투자 시작</button>
+    </div>
+  </div>
+
+  <script>
+    const messages = [
+      "1) 2020년 만료 예정인 교토의정서를 대체하는 파리**변화협약을 진행",
+      "2) 각 국가에서 파리**변화협약을 중요시 여기고 있음",
+      "3) 인터넷, 스마트폰의 대중화로 전 세계가 연결되고, 세계적인 기업들이 등장함",
+      `4) 세계적인 소득이 증가함에 따라 경제가 활발하게 이뤄짐`
+    ];
+
+
+    let currentIndex = 0;
+  
+    // 전체 화면 중 버튼을 제외한 부분 클릭 시 텍스트 추가
+    document.addEventListener("click", function (event) {
+      const isButton = event.target.closest("button");
+      if (!isButton && currentIndex < messages.length) {
+        const container = document.getElementById("story-text");
+        const newLine = document.createElement("div");
+        newLine.innerHTML = messages[currentIndex];
+        container.appendChild(newLine);
+        currentIndex++;
+      }
+    });
+  
+    // 버튼 클릭 시 다음 페이지로 이동
+    function submitFooterText() {
+      window.location.href = "11-2010년 법인별 투자.html";
+    }
+  </script>
+  
+</body>
+
+</html>

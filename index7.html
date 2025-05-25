@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareRound.css" rel="stylesheet">
+  <title>2009년 법인별 투자[A]</title>
+  <style>
+    body {
+      font-family: 'SUITE', 'NanumSquareRound', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eaf4fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1187px;
+      background: white;
+      border-radius: 16px;
+      margin-top: 2rem;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background: #6ea5ee;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+
+    .header-left {
+      position: absolute;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 80px;
+      width: auto;
+    }
+
+    .header-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .header-right {
+      position: absolute;
+      right: 2rem;
+      font-size: 4rem;
+      font-weight: bold;
+      opacity: 0.3;
+      font-style: italic;
+    }
+
+    .wrapper {
+      max-width: 1100px;
+      width: 90%;
+      margin: 0 auto;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .team-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2f80ed;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #d0e4f7;
+    }
+
+    .team-name .team-label {
+      color: #2f80ed;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+
+    .team-name .team-name-value {
+      color: #222;
+      font-weight: 700;
+    }
+
+    .team-scroll {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: 0px;
+      margin-top: 2.5rem;
+      margin-bottom: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .team-tab {
+      background-color: #eaf4fb;
+      border: 0.3px solid #ffffff00;
+      padding: 0.6rem 0.4rem;
+      border-radius: 16px 16px 0 0;
+      font-size: 0.85rem;
+      text-align: center;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .team-tab:hover {
+      background-color: #d0ebff;
+    }
+
+    .team-tab.active {
+      background-color: #6ea5ee;
+      color: white;
+      font-weight: bold;
+    }
+
+    .team-tab.complete.active {
+      background-color: #6ea5ee !important;
+      color: white !important;
+      font-weight: bold;
+    }
+
+    .team-tab.complete {
+      background-color: #06275250;
+      color: #ffffff;
+      transition: background 0.2s;
+    }
+
+    .team-tab.complete:hover {
+      background-color: #d0ebff;
+    }
+
+    .investment-container {
+      background: #f0f6fd;
+      border-radius: 0 0 12px 12px;
+      padding: 1.5rem 1.5rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .status-box {
+      background: #ffffff;
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+      gap: 1rem;
+    }
+
+    .status-values {
+      display: flex;
+      gap: 2rem;
+      font-size: 1.1rem;
+      flex-wrap: wrap;
+    }
+
+    .status-value {
+      font-weight: bold;
+      color: #2f80ed;
+    }
+
+    .company-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .company-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f4f8fd;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #d0e4f7;
+    }
+
+    .company-row label {
+      flex: 1;
+      font-weight: 600;
+    }
+
+    .company-row input {
+      width: 120px;
+      height: 25px;
+      text-align: right;
+      border: 1px solid #ccc;
+      transition: border 0.2s;
+    }
+
+    .company-row input:focus {
+      border: 1px solid #2f80ed;
+      outline: none;
+    }
+
+    .company-row.filled {
+      background-image: repeating-linear-gradient(45deg, #e3effb, #e3effb 3px, #f4f8fd 3px, #f4f8fd 6px);
+      border: 1.5px solid #6ea5ee;
+    }
+
+    .check-icon {
+      margin-left: 0.5rem;
+      color: #2f80ed;
+      font-size: 1.2rem;
+      font-weight: bold;
+      font-family: 'NanumSquareRound', Arial, sans-serif;
+      vertical-align: middle;
+    }
+
+    .button-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .button-wrapper button {
+      background: #2f80ed;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .reset-button {
+      background: #2f80ed;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .reset-button:hover {
+      background: #166edb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <img src="https://able0220.github.io/stockgameb/에이블 로고.png" alt="로고" />
+      </div>
+      <div class="header-title">2009년 법인별 투자</div>
+      <div class="header-right">A</div>
+    </header>
+    <div class="wrapper">
+      <div class="team-scroll" id="teamTabs"></div>
+      <div class="investment-container">
+        <div class="team-investment-card">
+          <div class="team-name" id="teamNameDisplay">팀 이름</div>
+            <div class="status-box">
+              <div class="status-values">
+                <div>자본금: <span id="capitalDisplay" class="status-value">0</span> 만원</div>
+                <div>남은 금액: <span id="remainingDisplay" class="status-value">0</span> 만원</div>
+                <div>총 투자금: <span id="sumDisplay" class="status-value">0</span> 만원</div>
+              </div>
+              <div>
+                <button class="reset-button" onclick="resetInvestment()">♻️ 투자값 초기화</button>
+              </div>
+            </div>
+          <div class="company-list" id="companyList"></div>
+        </div>
+      </div>
+      <div class="button-wrapper">
+        <button onclick="goToNextPage()">▶️ 투자 완료</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const teamNames = JSON.parse(sessionStorage.getItem("teamNames") || "[]");
+    const teamTabs = document.getElementById("teamTabs");
+    const companyList = document.getElementById("companyList");
+    const teamNameDisplay = document.getElementById("teamNameDisplay");
+    const capitalDisplay = document.getElementById("capitalDisplay");
+    const remainingDisplay = document.getElementById("remainingDisplay");
+    const sumDisplay = document.getElementById("sumDisplay");
+
+    let selectedTeam = "";
+    let teamCapitals = JSON.parse(localStorage.getItem("capitalMap") || "{}");
+    let teamInvestments = JSON.parse(sessionStorage.getItem("teamInvestments2009") || "{}");
+
+    const companies = ["A","B","C","D","E","F","G","H","I","J","K","L"];
+
+  function saveCurrentInvestment() {
+    if (!selectedTeam) return;
+    const currentInvestmentData = {};
+    companies.forEach(name => {
+      const input = document.getElementById("company-" + name);
+      currentInvestmentData[name] = parseInt(input?.value || "0");
+    });
+    teamInvestments[selectedTeam] = currentInvestmentData;
+    sessionStorage.setItem("teamInvestments2009", JSON.stringify(teamInvestments));
+  }
+
+
+    function selectTeam(name) {
+      saveCurrentInvestment();  // ✅ 이전 팀의 값 저장
+      selectedTeam = name;
+      teamNameDisplay.innerHTML = `<span class="team-label">법인명 :</span> <span class="team-name-value">${name}</span>`;
+      document.querySelectorAll(".team-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.textContent === name);
+      });
+      renderCompanies();
+      updateTotal();
+    }
+
+    function renderCompanies() {
+      const data = teamInvestments[selectedTeam] || {};
+      companyList.innerHTML = "";
+      companies.forEach(c => {
+        const row = document.createElement("div");
+        row.className = "company-row";
+        row.innerHTML = `
+          <label>
+            기업 ${c}
+            <span class="check-icon" id="check-${c}" style="display: none;">✔️</span>
+          </label>
+          <input type="number" id="company-${c}" placeholder="0" value="${data[c] || ""}" oninput="updateTotal()">
+        `;
+        companyList.appendChild(row);
+      });
+
+      capitalDisplay.textContent = (teamCapitals[selectedTeam] || 12000).toLocaleString();
+    }
+
+      function resetInvestment() {
+        if (!selectedTeam) return;
+        if (confirm("투자값을 초기화할까요?")) {
+          const resetData = {};
+          companies.forEach(c => resetData[c] = 0);
+          teamInvestments[selectedTeam] = resetData;
+
+          sessionStorage.setItem("teamInvestments2009", JSON.stringify(teamInvestments));
+          renderCompanies();
+          updateTotal();
+        }
+      }
+
+
+      function updateTotal() {
+        let total = 0;
+
+        companies.forEach(name => {
+          const input = document.getElementById("company-" + name);
+          const value = parseInt(input?.value || "0");
+          total += value;
+
+          const row = input.closest(".company-row");
+          const checkIcon = document.getElementById("check-" + name);
+          if (value > 0) {
+            row.classList.add("filled");
+            if (checkIcon) checkIcon.style.display = "inline";
+          } else {
+            row.classList.remove("filled");
+            if (checkIcon) checkIcon.style.display = "none";
+          }
+        });
+
+        const capital = teamCapitals[selectedTeam] || 12000;
+        const remaining = capital - total;
+
+        capitalDisplay.textContent = capital.toLocaleString();
+        remainingDisplay.textContent = remaining.toLocaleString();
+        sumDisplay.textContent = total.toLocaleString();
+
+        sumDisplay.style.color = total > capital ? "red" : "#2f80ed";
+        remainingDisplay.style.color = total > capital ? "red" : "#000";
+
+      // ✅ 탭에 완료 표시 (2005년처럼)
+      document.querySelectorAll(".team-tab").forEach(tab => {
+        const name = tab.textContent;
+        const sum = Object.values(teamInvestments[name] || {}).reduce((a, b) => a + b, 0);
+        tab.classList.toggle("complete", sum > 0);
+      });
+      }
+
+
+      function goToNextPage() {
+        if (!selectedTeam) return alert("법인을 선택해주세요.");
+        const total = parseInt(sumDisplay.textContent.replace(/,/g, ''));
+        const capital = teamCapitals[selectedTeam] || 12000;
+        if (total > capital) return alert("총 투자금이 자본금을 초과했습니다.");
+
+        // 현재 입력값만 저장 (최신 상태 반영)
+        const currentInvestmentData = {};
+        companies.forEach(name => {
+          const input = document.getElementById("company-" + name);
+          currentInvestmentData[name] = parseInt(input?.value || "0");
+        });
+        teamInvestments[selectedTeam] = currentInvestmentData;
+
+        sessionStorage.setItem("teamInvestments2009", JSON.stringify(teamInvestments));
+        sessionStorage.setItem("lastSelectedTeam", selectedTeam);
+        window.location.href = "8-2009년 투자 결과.html";
+      }
+
+
+    teamNames.forEach(name => {
+      const tab = document.createElement("button");
+      tab.className = "team-tab";
+      tab.textContent = name;
+      tab.onclick = () => selectTeam(name);
+      teamTabs.appendChild(tab);
+    });
+
+    const defaultTeam = teamNames[0];
+    if (defaultTeam) selectTeam(defaultTeam);
+  </script>
+</body>
+</html>

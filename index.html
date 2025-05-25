@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareRound.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2109@1.0/SUITE.css" rel="stylesheet">
+  <title>(주) 에이블 모의주식[A] </title>
+  <style>
+    body {
+      font-family: 'SUITE', 'NanumSquareRound', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eaf4fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1187px;
+      background: white;
+      border-radius: 16px;
+      margin-top: 2rem;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background: #6ea5ee;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+
+    .header-left {
+      position: absolute;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 80px;
+      width: auto;
+    }
+
+    .header-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .header-right {
+      position: absolute;
+      right: 2rem;
+      font-size: 4rem;
+      font-weight: bold;
+      opacity: 0.3;
+      font-style: italic;
+      color: #ffffff;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .main-description {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #333;
+      margin: 0 auto 1rem;
+      font-weight: bold;
+    }
+
+    .timeline-wrapper {
+      position: relative;
+      padding-bottom: 3rem;
+    }
+
+    .timeline {
+      display: flex;
+      justify-content: space-around;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: #ccc;
+      z-index: 0;
+    }
+
+    .timeline-year {
+      position: relative;
+      font-size: 1.6rem;
+      font-weight: 800;
+      padding: 0.8rem 1.6rem;
+      background-color: #dbeeff;
+      border-radius: 24px;
+      z-index: 1;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      border: 2px solid #98caff;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .timeline-year:hover {
+      transform: scale(1.12);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-step {
+      position: absolute;
+      transform: translateX(-50%);
+      background-color: #c3e5ff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .timeline-step.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .timeline-step:nth-child(1) { left: 25%; }
+    .timeline-step:nth-child(2) { left: 50%; background-color: #b5dbff; }
+    .timeline-step:nth-child(3) { left: 75%; background-color: #a7d1ff; }
+
+    .capital-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem auto;
+      flex-wrap: wrap;
+    }
+
+    .capital-inline {
+      background: #cce6ff27;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      border: 2px solid #339af0;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .capital-amount {
+      font-size: 1.3rem;
+      color: #003d66;
+      font-weight: 800;
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+    }
+
+    .capital-note {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .team-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .team-inputs input {
+      height: 50px;
+      padding: 0 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      transition: 0.2s;
+    }
+
+    .team-inputs input:focus {
+      outline: none;
+      border-color: #2f80ed;
+      box-shadow: 0 0 5px rgba(47, 128, 237, 0.4);
+    }
+
+    .button-wrapper {
+      text-align: center;
+      padding: 1rem 2rem 2rem;
+    }
+
+    .team-inputs input.filled {
+      background-color: #e0f3ff; /* 연한 하늘색 등 원하는 색상 */
+      border-color: #339af0;
+    }
+
+    button {
+      background: #2f80ed;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #5393f5;
+      transform: scale(1.08);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <img src="https://able0220.github.io/stockgameb/에이블 로고.png" alt="로고" class="logo" />
+      </div>
+      <div class="header-title">(주) 에이블 주식 시뮬레이션</div>
+      <div class="header-right">A</div>
+    </header>
+
+    <main>
+      <div class="timeline-wrapper">
+        <div class="timeline">
+          <div class="timeline-year">2005</div>
+          <div class="timeline-year">2009</div>
+          <div class="timeline-year">2010</div>
+          <div class="timeline-year">2015</div>
+        </div>
+        <div class="timeline-steps">
+          <div class="timeline-step">1번째 투자</div>
+          <div class="timeline-step">2번째 투자</div>
+          <div class="timeline-step">3번째 투자</div>
+        </div>
+      </div>
+
+      <div class="capital-row">
+        <button onclick="toggleCapital()" id="capitalBtn">💰 금액 보기</button>
+        <div id="capitalBox" class="capital-inline hidden">
+          <span class="capital-amount">1억 2천만원</span>
+          <span class="capital-note"><strong>[12,000]  (단위:만원)</strong></span>
+        </div>
+      </div>
+
+      <div class="main-description">
+        투자에 앞서 법인명을 입력하고 ▶️시작하기 버튼을 눌러 주세요.
+      </div>
+    </main>
+
+    <div class="team-inputs">
+      <input type="text" id="footerInput1" placeholder="법인명 1" />
+      <input type="text" id="footerInput2" placeholder="법인명 2" />
+      <input type="text" id="footerInput3" placeholder="법인명 3" />
+      <input type="text" id="footerInput4" placeholder="법인명 4" />
+      <input type="text" id="footerInput5" placeholder="법인명 5" />
+      <input type="text" id="footerInput6" placeholder="법인명 6" />
+      <input type="text" id="footerInput7" placeholder="법인명 7" />
+      <input type="text" id="footerInput8" placeholder="법인명 8" />
+      <input type="text" id="footerInput9" placeholder="법인명 9" />
+      <input type="text" id="footerInput10" placeholder="법인명 10" />
+    </div>
+
+    <div class="button-wrapper">
+      <button onclick="submitFooterText()">▶️ 시작하기</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const years = document.querySelectorAll(".timeline-year");
+      const steps = document.querySelectorAll(".timeline-step");
+
+      years.forEach((year, index) => {
+        year.addEventListener("click", () => {
+          steps[index].classList.add("show");
+        });
+      });
+
+      // ✅ input 색상 변화 로직
+      const inputs = document.querySelectorAll(".team-inputs input");
+      inputs.forEach(input => {
+        input.addEventListener("input", () => {
+          if (input.value.trim()) {
+            input.classList.add("filled");
+          } else {
+            input.classList.remove("filled");
+          }
+        });
+      });
+    });
+
+
+    function toggleCapital() {
+  const box = document.getElementById('capitalBox');
+  const btn = document.getElementById('capitalBtn');
+  box.classList.toggle('hidden');
+  btn.textContent = box.classList.contains('hidden') ? '💰 금액 보기' : '💰 금액 숨기기';
+}
+
+
+
+    function submitFooterText() {
+      let inputs = [];
+      for (let i = 1; i <= 10; i++) {
+        let value = document.getElementById("footerInput" + i).value.trim();
+        if (value) inputs.push(value);
+      }
+
+      if (inputs.length === 0) {
+        alert("팀명을 하나 이상 입력해주세요!");
+        return;
+      }
+
+      sessionStorage.setItem("teamNames", JSON.stringify(inputs));
+
+      const confirmSave = confirm(
+        `총 ${inputs.length}개의 법인명이 저장되었습니다.\n다음 페이지로 이동할까요?`
+      );
+      if (confirmSave) {
+        window.location.href = "2-2005년 시대.html";
+      }
+    }
+  </script>
+</body>
+</html>
